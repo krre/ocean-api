@@ -2,10 +2,6 @@
 port = 21000
 anonym_allowed = true
 
-[server.ssl]
-key = "/home/../ssl/ocean.key"
-cert = "/home/../ssl/ocean.cert"
-
 [frontend]
 domen = "https://ocean-mandela.info"
 
