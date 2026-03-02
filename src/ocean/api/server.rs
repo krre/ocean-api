@@ -20,7 +20,7 @@ impl ApiServer {
 
     pub async fn listen(&self) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let port = config::CONFIG.server.port;
-        let addr = format!("0.0.0.0:{}", port);
+        let addr = format!("127.0.0.1:{}", port);
 
         let tls_cfg = {
             let certs = CertificateDer::pem_file_iter(config::CONFIG.server.ssl.cert.as_str())
