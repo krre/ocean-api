@@ -11,7 +11,6 @@ use hyper::body::Bytes;
 use hyper::{Method, Request, Response, StatusCode, body::Incoming as IncomingBody, header};
 use log::{error, info};
 use std::collections::HashMap;
-use std::net::SocketAddr;
 use std::sync::LazyLock;
 
 type GenericError = Box<dyn std::error::Error + Send + Sync>;
@@ -194,7 +193,7 @@ static METHODS: LazyLock<HashMap<String, Rh>> = LazyLock::new(|| {
     m
 });
 
-pub async fn route(req: Request<IncomingBody>, addr: SocketAddr) -> ResponseResult {
+pub async fn route(req: Request<IncomingBody>) -> ResponseResult {
     if req.method() != Method::POST || req.uri().path() != "/api" {
         return bad_request(req);
     }
@@ -227,16 +226,19 @@ pub async fn route(req: Request<IncomingBody>, addr: SocketAddr) -> ResponseResu
 
     let user_id = user.id;
     let user_name = user.name.clone();
+    let client_ip = req
+        .headers()
+        .get("X-Forwarded-For")
+        .and_then(|v| v.to_str().ok())
+        .map(|s| s.to_string())
+        .unwrap_or_else(|| "Unknown".to_string());
     let whole_body = req.collect().await?.aggregate();
     let bytes = whole_body.chunk();
     let raw_req = String::from_utf8_lossy(bytes);
 
     info!(
         "[REQUEST] {} ({}: {}) {}",
-        addr.ip(),
-        user_id,
-        user.name,
-        raw_req
+        client_ip, user_id, user.name, raw_req
     );
 
     let json_rpc_req = serde_json::from_slice::<json_rpc::Request>(bytes);
@@ -256,10 +258,7 @@ pub async fn route(req: Request<IncomingBody>, addr: SocketAddr) -> ResponseResu
     let raw_resp = serde_json::to_string(&json_rpc_resp).unwrap();
     info!(
         "[RESPONSE] {} ({}: {}) {}",
-        addr.ip(),
-        user_id,
-        user_name,
-        raw_resp
+        client_ip, user_id, user_name, raw_resp
     );
 
     let mut response = Response::builder().body(full(raw_resp)).unwrap();

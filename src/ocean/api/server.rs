@@ -21,13 +21,13 @@ impl ApiServer {
         info!("API server listen on port {}", port);
 
         loop {
-            let (stream, addr) = listener.accept().await?;
+            let (stream, _) = listener.accept().await?;
 
             tokio::task::spawn(async move {
                 let io = TokioIo::new(stream);
 
                 if let Err(err) = http1::Builder::new()
-                    .serve_connection(io, service_fn(move |req| router::route(req, addr)))
+                    .serve_connection(io, service_fn(router::route))
                     .await
                 {
                     eprintln!("Error serving connection: {:?}", err);
