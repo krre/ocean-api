@@ -1,2 +1,2 @@
-# Ocean
-Backend for [Ocean](https://github.com/krre/ocean-frontend) frontend
+# Ocean API
+API server for [Ocean](https://ocean-mandela.info) site.
