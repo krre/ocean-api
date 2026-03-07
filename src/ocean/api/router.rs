@@ -228,7 +228,7 @@ pub async fn route(req: Request<IncomingBody>) -> ResponseResult {
     let user_name = user.name.clone();
     let client_ip = req
         .headers()
-        .get("X-Forwarded-For")
+        .get("x-forwarded-for")
         .and_then(|v| v.to_str().ok())
         .map(|s| s.to_string())
         .unwrap_or_else(|| "Unknown".to_string());
