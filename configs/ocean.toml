@@ -1,5 +1,5 @@
 [server]
-port = 21000
+port = 4000
 anonym_allowed = true
 
 [frontend]
