@@ -194,7 +194,7 @@ static METHODS: LazyLock<HashMap<String, Rh>> = LazyLock::new(|| {
 });
 
 pub async fn route(req: Request<IncomingBody>) -> ResponseResult {
-    if req.method() != Method::POST || req.uri().path() != "/api" {
+    if req.method() != Method::POST {
         return bad_request(req);
     }
 
