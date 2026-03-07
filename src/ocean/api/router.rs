@@ -8,7 +8,7 @@ use crate::types;
 use http_body_util::{BodyExt, Full};
 use hyper::body::Buf;
 use hyper::body::Bytes;
-use hyper::{Method, Request, Response, StatusCode, body::Incoming as IncomingBody, header};
+use hyper::{Method, Request, Response, StatusCode, body::Incoming as IncomingBody};
 use log::{error, info};
 use std::collections::HashMap;
 use std::sync::LazyLock;
@@ -261,12 +261,7 @@ pub async fn route(req: Request<IncomingBody>) -> ResponseResult {
         client_ip, user_id, user_name, raw_resp
     );
 
-    let mut response = Response::builder().body(full(raw_resp)).unwrap();
-    response.headers_mut().insert(
-        "Access-Control-Allow-Origin",
-        header::HeaderValue::from_static("*"),
-    );
-
+    let response = Response::builder().body(full(raw_resp)).unwrap();
     Ok(response)
 }
 
