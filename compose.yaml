@@ -1,0 +1,15 @@
+services:
+  app:
+    build:
+      context: .
+      target: final
+    image: krre/ocean-api:v1.0
+    restart: always
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+      - RUST_LOG=info
+    ports:
+      - 127.0.0.1:4000:3000
+    volumes:
+      - ./config:/etc/ocean
