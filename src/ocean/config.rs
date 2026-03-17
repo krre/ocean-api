@@ -1,5 +1,6 @@
 use serde_derive::Deserialize;
 use std::fs;
+use std::path::PathBuf;
 use std::sync::LazyLock;
 
 pub static CONFIG: LazyLock<Config> = LazyLock::new(|| Config::new());
@@ -50,11 +51,29 @@ pub struct Watchdog {
 
 impl Config {
     pub fn new() -> Self {
-        let mut config_path = dirs::config_dir().unwrap();
-        config_path.push("ocean/ocean.toml");
+        let config_file = "ocean/ocean.toml";
 
-        if !config_path.exists() {
-            panic!("config path not exists: {}", config_path.to_str().unwrap());
+        let mut home_config_path = dirs::config_dir().unwrap();
+        home_config_path.push(config_file);
+
+        let config_path: String;
+
+        if !home_config_path.exists() {
+            let mut etc_config_path = PathBuf::new();
+            etc_config_path.push("/etc");
+            etc_config_path.push(config_file);
+
+            if !etc_config_path.exists() {
+                panic!(
+                    "config path not exists: {}, {}",
+                    home_config_path.to_str().unwrap(),
+                    etc_config_path.to_str().unwrap()
+                );
+            } else {
+                config_path = etc_config_path.to_str().unwrap().to_string();
+            }
+        } else {
+            config_path = home_config_path.to_str().unwrap().to_string();
         }
 
         let config_text = fs::read_to_string(config_path).unwrap();
