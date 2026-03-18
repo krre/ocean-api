@@ -3,7 +3,7 @@ services:
     build:
       context: .
       target: final
-    image: krre/ocean-api:v1.0
+    image: krre/ocean-api:1.0
     restart: always
     environment:
       - HOST=0.0.0.0
