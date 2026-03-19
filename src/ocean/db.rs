@@ -9,9 +9,11 @@ pub struct Db {
 impl Db {
     pub fn new() -> Db {
         let database_url = format!(
-            "postgres://{}:{}@localhost/{}",
+            "postgres://{}:{}@{}:{}/{}",
             config::CONFIG.postgres.username,
             config::CONFIG.postgres.password,
+            config::CONFIG.postgres.host,
+            config::CONFIG.postgres.port,
             config::CONFIG.postgres.database
         );
         let conn = PgConnection::establish(&database_url)
