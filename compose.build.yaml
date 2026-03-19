@@ -1,0 +1,6 @@
+services:
+  app:
+    build:
+      context: .
+      target: final
+    image: krre/ocean-api:1.0
