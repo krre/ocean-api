@@ -10,7 +10,7 @@ pub fn start() {
         process_mandels(&mut db);
 
         loop {
-            thread::sleep(time::Duration::from_secs(12 * 60 * 60)); // 12 hours
+            thread::sleep(time::Duration::from_hours(12));
             process_mandels(&mut db);
         }
     });
