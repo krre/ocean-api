@@ -15,7 +15,7 @@ pub fn start() {
         }
     });
 
-    info!("Trash monitor started");
+    info!("trash monitor started");
 }
 
 fn process_mandels(db: &mut db::Db) {
@@ -32,7 +32,7 @@ fn process_mandels(db: &mut db::Db) {
         .bind::<Int4, _>(crate::types::Vote::Yes as i32)
         .execute(&mut db.conn).expect("Failed to move mandels to trash");
 
-    info!("Moved to trash {} mandels", moved);
+    info!("moved to trash {} mandels", moved);
 
     // Restore from trash
     let restored = diesel::sql_query(
@@ -45,5 +45,5 @@ fn process_mandels(db: &mut db::Db) {
         .bind::<Int4, _>(crate::types::Vote::Yes as i32)
         .execute(&mut db.conn).expect("Failed to restore mandels from trash");
 
-    info!("Restored from trash {} mandels", restored);
+    info!("restored from trash {} mandels", restored);
 }

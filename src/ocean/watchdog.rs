@@ -9,7 +9,7 @@ pub fn start() {
     thread::spawn(|| {
         loop {
             thread::sleep(time::Duration::from_secs(60));
-            info!("Heartbeat");
+            info!("heartbeat");
 
             let client = reqwest::blocking::Client::builder()
                 .danger_accept_invalid_certs(true)
@@ -33,11 +33,11 @@ pub fn start() {
             let resp = client.post(url).json(&json).send();
 
             if let Err(e) = resp {
-                error!("Watchdog request error: {:?}", e);
+                error!("watchdog request error: {:?}", e);
                 std::process::exit(0);
             }
         }
     });
 
-    info!("Watchdog started");
+    info!("watchdog started");
 }

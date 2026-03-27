@@ -42,7 +42,7 @@ async fn send_request(method: &str, params: serde_json::Value) -> serde_json::Va
     match res {
         Ok(r) => r,
         Err(e) => {
-            error!("Telegram API request error: {:?}", e);
+            error!("telegram API request error: {:?}", e);
             serde_json::Value::Null
         }
     }
@@ -63,7 +63,7 @@ async fn send(
         .await?;
 
     if !resp.ok {
-        error!("Telegram API response error: {}", resp.description.unwrap());
+        error!("telegram API response error: {}", resp.description.unwrap());
         return Ok(serde_json::Value::Null);
     }
 

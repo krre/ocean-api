@@ -1,6 +1,5 @@
 extern crate diesel_migrations;
 use diesel_migrations::MigrationHarness;
-use log::info;
 use ocean::api::user_cache;
 use ocean::app;
 use ocean::db;
@@ -13,8 +12,6 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     dotenvy::dotenv().ok();
     env_logger::builder().format_timestamp(None).init();
-
-    info!("Ocean started");
 
     let mut db = db::Db::new();
     db.conn.run_pending_migrations(MIGRATIONS)?;

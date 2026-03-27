@@ -285,7 +285,7 @@ fn bad_request(req: Request<IncomingBody>) -> ResponseResult {
 }
 
 fn unauthorized(token: &str) -> ResponseResult {
-    info!("Unauthorized: token: {}", token);
+    info!("unauthorized: token: {}", token);
 
     Ok(Response::builder()
         .status(StatusCode::UNAUTHORIZED)
