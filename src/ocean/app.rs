@@ -11,7 +11,7 @@ impl App {
     }
 
     pub async fn start(&self) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        if config::CONFIG.watchdog.enabled {
+        if config::CONFIG.watchdog_enabled {
             watchdog::start();
         }
 

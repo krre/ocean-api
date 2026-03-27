@@ -11,6 +11,7 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    dotenvy::dotenv().ok();
     env_logger::builder().format_timestamp(None).init();
 
     info!("Ocean started");

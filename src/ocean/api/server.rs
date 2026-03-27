@@ -14,12 +14,10 @@ impl ApiServer {
     }
 
     pub async fn listen(&self) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        let host = config::CONFIG.server.host.clone();
-        let port = config::CONFIG.server.port;
-        let addr = format!("{host}:{port}");
+        let addr = config::CONFIG.server_addr.clone();
 
         let listener = TcpListener::bind(&addr).await?;
-        info!("API server listen on {addr}");
+        info!("Listening on {addr}");
 
         loop {
             let (stream, _) = listener.accept().await?;

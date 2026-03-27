@@ -2,7 +2,7 @@ use crate::config;
 use crate::types::UserCode;
 
 pub fn authorize(method: &str, user_code: &UserCode) -> bool {
-    let anonym_allowed = config::CONFIG.server.anonym_allowed;
+    let anonym_allowed = config::CONFIG.anonym_allowed;
 
     let allowed_code = match method {
         "mandela.create" => {

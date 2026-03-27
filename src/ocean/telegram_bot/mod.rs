@@ -4,11 +4,11 @@ use log::error;
 pub mod api;
 
 pub fn send_message(text: &str) {
-    send_message_to(&config::CONFIG.telegram_bot.channel, text);
+    send_message_to(&config::CONFIG.telegram_bot_channel, text);
 }
 
 pub fn send_admin_message(text: &str) {
-    send_message_to(&config::CONFIG.telegram_bot.admin_chat_id, text);
+    send_message_to(&config::CONFIG.telegram_bot_admin_chat_id, text);
 }
 
 fn send_message_to(chat_id: &str, text: &str) {
@@ -71,9 +71,9 @@ async fn send(
 }
 
 fn make_url(method: &str) -> String {
-    config::CONFIG.telegram_bot.url.clone()
+    config::CONFIG.telegram_bot_url.clone()
         + "/bot"
-        + &config::CONFIG.telegram_bot.token
+        + &config::CONFIG.telegram_bot_token
         + "/"
         + method
 }

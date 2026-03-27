@@ -213,7 +213,7 @@ pub fn create(mut data: RequestData) -> RequestResult {
 
     let topic_title = format!(
         "<a href='{}/forum/topic/{}'>{}</a>",
-        config::CONFIG.frontend.domen,
+        config::CONFIG.frontend_domen,
         req.topic_id,
         topic_name
     );

@@ -82,7 +82,7 @@ pub fn format_mandela_title(mandela_title: mandela::MandelaTitle) -> String {
 
     format!(
         "<a href='{}/mandela/{}'>{}</a>",
-        config::CONFIG.frontend.domen,
+        config::CONFIG.frontend_domen,
         mandela_title.id,
         title
     )
