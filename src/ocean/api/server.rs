@@ -3,7 +3,7 @@ use crate::config;
 use hyper::server::conn::http1;
 use hyper::service::service_fn;
 use hyper_util::rt::TokioIo;
-use log::info;
+use log::{error, info};
 use tokio::net::TcpListener;
 
 pub struct ApiServer;
@@ -29,7 +29,7 @@ impl ApiServer {
                     .serve_connection(io, service_fn(router::route))
                     .await
                 {
-                    eprintln!("Error serving connection: {:?}", err);
+                    error!("error serving connection: {:?}", err);
                 }
             });
         }
