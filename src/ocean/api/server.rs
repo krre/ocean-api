@@ -17,7 +17,7 @@ impl ApiServer {
         let addr = config::CONFIG.server_addr.clone();
 
         let listener = TcpListener::bind(&addr).await?;
-        info!("listening on {addr}");
+        info!("listening on http://{addr}");
 
         loop {
             let (stream, _) = listener.accept().await?;
