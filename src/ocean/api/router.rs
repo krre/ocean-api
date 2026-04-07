@@ -233,17 +233,18 @@ pub async fn route(req: Request<IncomingBody>) -> ResponseResult {
         .map(|s| s.to_string())
         .unwrap_or_else(|| "Unknown".to_string());
     let whole_body = req.collect().await?.aggregate();
-    let bytes = whole_body.chunk();
-    let raw_request = String::from_utf8_lossy(bytes);
-    let json_request = serde_json::from_slice::<json_rpc::Request>(bytes);
+    let json_value: serde_json::Value =
+        serde_json::from_slice(whole_body.chunk()).unwrap_or_default();
 
     info!(
         message_type = "request",
         user_ip,
         user_id,
         user_name,
-        message = raw_request.to_string()
+        message = json_value.to_string()
     );
+
+    let json_request = serde_json::from_value::<json_rpc::Request>(json_value);
 
     let json_response = if let Ok(request) = json_request {
         exec(user, request)
@@ -257,16 +258,18 @@ pub async fn route(req: Request<IncomingBody>) -> ResponseResult {
         }
     };
 
-    let raw_response = serde_json::to_string(&json_response).unwrap();
+    let json_value = serde_json::to_value(json_response).unwrap_or_default();
+    let json_string = json_value.to_string();
+
     info!(
         message_type = "response",
         user_ip,
         user_id,
         user_name,
-        message = raw_response
+        message = json_string
     );
 
-    let response = Response::builder().body(full(raw_response)).unwrap();
+    let response = Response::builder().body(full(json_string)).unwrap();
     Ok(response)
 }
 
