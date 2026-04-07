@@ -9,9 +9,9 @@ use http_body_util::{BodyExt, Full};
 use hyper::body::Buf;
 use hyper::body::Bytes;
 use hyper::{Method, Request, Response, StatusCode, body::Incoming as IncomingBody};
-use log::{error, info};
 use std::collections::HashMap;
 use std::sync::LazyLock;
+use tracing::{error, info};
 
 type GenericError = Box<dyn std::error::Error + Send + Sync>;
 type Result<T> = std::result::Result<T, GenericError>;
@@ -226,7 +226,7 @@ pub async fn route(req: Request<IncomingBody>) -> ResponseResult {
 
     let user_id = user.id;
     let user_name = user.name.clone();
-    let client_ip = req
+    let user_ip = req
         .headers()
         .get("x-forwarded-for")
         .and_then(|v| v.to_str().ok())
@@ -234,34 +234,39 @@ pub async fn route(req: Request<IncomingBody>) -> ResponseResult {
         .unwrap_or_else(|| "Unknown".to_string());
     let whole_body = req.collect().await?.aggregate();
     let bytes = whole_body.chunk();
-    let raw_req = String::from_utf8_lossy(bytes);
+    let raw_request = String::from_utf8_lossy(bytes);
+    let json_request = serde_json::from_slice::<json_rpc::Request>(bytes);
 
     info!(
-        "[REQUEST] {} ({}: {}) {}",
-        client_ip, user_id, user.name, raw_req
+        message_type = "request",
+        user_ip,
+        user_id,
+        user_name,
+        message = raw_request.to_string()
     );
 
-    let json_rpc_req = serde_json::from_slice::<json_rpc::Request>(bytes);
-
-    let json_rpc_resp = if let Ok(r) = json_rpc_req {
-        exec(user, r)
+    let json_response = if let Ok(request) = json_request {
+        exec(user, request)
     } else {
         json_rpc::response::Response {
             error: Some(json_rpc::Error::from_api_error(&api::Error::new(
                 api::error::PARSE_ERROR,
-                Some(json_rpc_req.err().unwrap().to_string()),
+                Some(json_request.err().unwrap().to_string()),
             ))),
             ..Default::default()
         }
     };
 
-    let raw_resp = serde_json::to_string(&json_rpc_resp).unwrap();
+    let raw_response = serde_json::to_string(&json_response).unwrap();
     info!(
-        "[RESPONSE] {} ({}: {}) {}",
-        client_ip, user_id, user_name, raw_resp
+        message_type = "response",
+        user_ip,
+        user_id,
+        user_name,
+        message = raw_response
     );
 
-    let response = Response::builder().body(full(raw_resp)).unwrap();
+    let response = Response::builder().body(full(raw_response)).unwrap();
     Ok(response)
 }
 

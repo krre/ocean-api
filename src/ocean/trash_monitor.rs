@@ -1,8 +1,8 @@
 use crate::db;
 use diesel::prelude::*;
-use log::info;
 use std::thread;
 use std::time;
+use tracing::info;
 
 pub fn start() {
     thread::spawn(|| {

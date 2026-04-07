@@ -1,8 +1,8 @@
 use crate::config;
 use crate::json_rpc;
-use log::{error, info};
 use std::thread;
 use std::time;
+use tracing::{error, info};
 use url::Url;
 
 pub fn start() {

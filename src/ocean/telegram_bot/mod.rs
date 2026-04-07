@@ -1,5 +1,5 @@
 use crate::config;
-use log::error;
+use tracing::error;
 
 pub mod api;
 
