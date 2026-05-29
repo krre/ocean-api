@@ -1,7 +1,7 @@
 use serde_derive::Deserialize;
 use std::sync::LazyLock;
 
-pub static CONFIG: LazyLock<Config> = LazyLock::new(|| Config::new());
+pub static CONFIG: LazyLock<Config> = LazyLock::new(Config::new);
 
 #[derive(Debug, Deserialize)]
 pub struct Config {

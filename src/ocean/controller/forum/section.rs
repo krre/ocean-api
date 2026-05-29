@@ -36,11 +36,7 @@ pub fn get_sections(
     .load::<Section>(&mut db.conn)?;
 
     if let Some(id) = category_id {
-        // Expensive but simple
-        result = result
-            .into_iter()
-            .filter(|section| section.category_id == id)
-            .collect();
+        result.retain(|section| section.category_id == id);
     }
 
     Ok(result)

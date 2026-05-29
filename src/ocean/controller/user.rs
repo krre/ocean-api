@@ -191,7 +191,7 @@ pub fn get_one(mut data: RequestData) -> RequestResult {
 
     use diesel::dsl::*;
 
-    let user = sql_query(format!(
+    let user = sql_query(
         "SELECT u.id, u.name, ug.code, u.gender, u.blocked, u.create_ts,
             (SELECT count(*) FROM mandels WHERE user_id = u.id) AS mandela_count,
             (SELECT count(*) FROM comments WHERE user_id = u.id) AS comment_count,
@@ -215,8 +215,8 @@ pub fn get_one(mut data: RequestData) -> RequestResult {
             WHERE fp.user_id = $1 and l.value = 1) AS dislike_count
         FROM users AS u
             JOIN user_groups AS ug ON ug.id = u.group_id
-        WHERE u.id = $1"
-    ))
+        WHERE u.id = $1",
+    )
     .bind::<Int4, _>(req.id)
     .load::<User>(&mut data.db.conn)?;
 
